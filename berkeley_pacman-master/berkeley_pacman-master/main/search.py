@@ -149,9 +149,54 @@ def breadthFirstSearch(problem):
 
     # util.raiseNotDefined()
 
+def remove(list, currNode):
+    for node, path in list:
+        if node == currNode:
+            list.remove((node, path))
+            
+def get(list, currNode):
+    for node, path in list:
+        if node == currNode:
+            return path
+
+
 
 def uniformCostSearch(problem, heuristic=None):
     """Search the node of least total cost first."""
+    
+    
+    pathPriorityQueue = util.PriorityQueue()
+    visitedNodes = []
+    pathList = []
+    startNode = problem.getStartState()
+    priority = 0
+    pathPriorityQueue.push(startNode, priority)
+    visitedNodes.append(startNode)
+    pathList.append((startNode, []))
+    if pathPriorityQueue.isEmpty() or problem.isGoalState(startNode):
+        return []
+    
+    priority, _, currNode = pathPriorityQueue.pop()
+    currPath = []
+    for node, path in pathList:
+        if node == currNode:
+            currPath = path
+
+    while not problem.isGoalState(currNode):
+        for succNode, action, cost in problem.getSuccessors(currNode):
+            if succNode not in visitedNodes:
+                visitedNodes.append(succNode)
+                pathPriorityQueue.push(succNode, priority + cost)
+                pathList.append((succNode, currPath + [action]))
+            else:
+                pathPriorityQueue.update(succNode, priority + cost)
+                for node, path in pathList:
+                    if node == succNode:
+                        pathList.remove((node, path))
+                pathList.append((succNode, currPath + [action]))
+        priority, _, currNode = pathPriorityQueue.pop() 
+        currPath = get(pathList, currNode)
+    return currPath
     "*** YOUR CODE HERE ***"
     # util.raiseNotDefined()
 
@@ -167,7 +212,7 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
 
 
 # Abbreviations
