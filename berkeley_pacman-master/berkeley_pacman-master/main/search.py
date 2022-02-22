@@ -125,14 +125,35 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
+    pathQueue = util.Queue()
+    visitedNodes = []
+
+    startNode = problem.getStartState()
+    pathQueue.push((startNode, []))
+    visitedNodes.append(startNode)
+
+    if pathQueue.isEmpty() or problem.isGoalState(startNode):
+        return []
+    
+    currNode, currPath = pathQueue.pop()
+    while not problem.isGoalState(currNode):
+        for succNode, action, cost in problem.getSuccessors(currNode):
+            if succNode not in visitedNodes:
+                visitedNodes.append(succNode)
+                pathQueue.push((succNode, currPath + [action]))
+        currNode, currPath = pathQueue.pop()
+
+    return currPath
+
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    # util.raiseNotDefined()
 
 
 def uniformCostSearch(problem, heuristic=None):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
 
 
 def nullHeuristic(state, problem=None):
